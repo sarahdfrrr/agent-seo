@@ -268,3 +268,4 @@ Follow `agents/voice-tone.md` strictly:
 ## Related Skills
 
 - **seo-strategy** : Strategy, keyword research, and backlog creation (produces the briefs this skill consumes)
+- **humanizer** : Run on the finished article before publishing to strip AI-sounding patterns (staged openers, forced triads, inflated claims, etc.) while keeping every fact and quote intact.
