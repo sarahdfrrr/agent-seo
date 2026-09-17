@@ -115,8 +115,9 @@ kit-seo-agent/
 ├── README.md                    ← Vous etes ici
 ├── SETUP.md                     ← Guide d'onboarding detaille
 ├── skills/
-│   └── seo-strategy/
-│       └── SKILL.md             ← Le skill SEO (coeur de l'agent)
+│   ├── seo-strategy/SKILL.md    ← Recherche keywords, concurrence, backlog priorise (7 phases)
+│   ├── seo-writer/SKILL.md      ← Brief 10x + redaction d'article a partir du backlog
+│   └── seo-audit/SKILL.md       ← Audit technique (indexation, Core Web Vitals, cannibalisation)
 ├── agents/
 │   ├── product-marketing-context.md  ← Template contexte business
 │   ├── icp-bible.md                  ← Template ICP
