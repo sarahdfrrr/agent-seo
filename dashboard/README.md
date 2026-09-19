@@ -11,12 +11,11 @@ Recharts. Pensé pour être déployé sur Vercel.
 
 ```bash
 npm install
-cp .env.example .env.local   # renseigne au moins DASHBOARD_PASSWORD
+cp .env.example .env.local   # optionnel : à remplir seulement si tu actives des données live
 npm run dev
 ```
 
-Ouvre [http://localhost:3000](http://localhost:3000) — tu seras redirigé
-vers `/login`.
+Ouvre [http://localhost:3000](http://localhost:3000).
 
 ## Données : démo par défaut, réelles quand tu es prêt
 
@@ -57,19 +56,22 @@ source réellement utilisée.
   Management API, Meta App Review, YouTube Analytics OAuth), donc à finaliser
   au cas par cas. Le canal reste sur données de démo en attendant.
 
-## Accès protégé
+## Accès
 
-Un seul mot de passe partagé (`DASHBOARD_PASSWORD`) protège tout le
-dashboard, via un cookie de session signé. Si la variable n'est pas définie,
-l'app affiche un écran de configuration plutôt que de rester ouverte.
+Le dashboard n'a pas d'écran de connexion : toute personne qui a l'URL peut
+le consulter. Adapté à un usage sur une URL privée non partagée largement.
+Si tu déploies sur Vercel et veux restreindre l'accès, active la
+**Vercel Authentication** (ou la protection par mot de passe, selon ton
+plan) dans Project Settings > Deployment Protection — aucune modification
+du code n'est nécessaire.
 
 ## Déploiement sur Vercel
 
 1. Pousse ce dossier sur GitHub (déjà fait si tu es dans ce repo).
 2. Sur [vercel.com/new](https://vercel.com/new), importe le repo et indique
    `dashboard` comme *Root Directory*.
-3. Ajoute les variables d'environnement de `.env.example` que tu utilises
-   (au minimum `DASHBOARD_PASSWORD`) dans Project Settings > Environment
+3. Si tu actives des données live, ajoute les variables d'environnement
+   correspondantes de `.env.example` dans Project Settings > Environment
    Variables.
 4. Déploie. Aucune configuration supplémentaire n'est nécessaire — le projet
    est un Next.js standard.
@@ -80,18 +82,16 @@ l'app affiche un écran de configuration plutôt que de rester ouverte.
 dashboard/
 ├── app/
 │   ├── (dashboard)/        Layout + pages (vue d'ensemble, un dossier par canal)
-│   ├── api/data/[channel]/ Endpoint JSON (mêmes données que l'UI)
-│   └── login/               Page de connexion
+│   └── api/data/[channel]/ Endpoint JSON (mêmes données que l'UI)
 ├── components/
 │   ├── charts/               Line/Bar/Sparkline (Recharts, palette validée accessibilité)
 │   ├── dashboard/             Sidebar, filtres, cartes KPI, tables
 │   └── ui/                     Primitives (Card, Badge)
-├── lib/
-│   ├── mock/                  Générateur de données de démo (déterministe)
-│   ├── integrations/          Connecteurs API réels par canal
-│   ├── data/                  Agrégation KPI, config par canal, assemblage des pages
-│   └── utils/                 Dates, formatage, filtres d'URL
-└── proxy.ts                    Garde d'authentification (toutes les routes sauf /login)
+└── lib/
+    ├── mock/                  Générateur de données de démo (déterministe)
+    ├── integrations/          Connecteurs API réels par canal
+    ├── data/                  Agrégation KPI, config par canal, assemblage des pages
+    └── utils/                 Dates, formatage, filtres d'URL
 ```
 
 ## KPI suivis par canal

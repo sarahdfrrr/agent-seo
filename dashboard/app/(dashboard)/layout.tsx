@@ -2,9 +2,9 @@ import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Filters } from "@/components/dashboard/Filters";
 import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
 
-// Every page here is auth-gated and reads live query params server-side —
-// there's nothing worth prerendering, and Sidebar/Filters' useSearchParams()
-// requires this (or a Suspense boundary) to avoid the static-shell bailout.
+// Every page here reads live query params server-side — there's nothing
+// worth prerendering, and Sidebar/Filters' useSearchParams() requires this
+// (or a Suspense boundary) to avoid the static-shell bailout.
 export const dynamic = "force-dynamic";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

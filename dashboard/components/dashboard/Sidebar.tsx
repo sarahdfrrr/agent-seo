@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { LayoutDashboard, LineChart, Search, Megaphone, Mail, Share2, LogOut } from "lucide-react";
+import { LayoutDashboard, LineChart, Search, Megaphone, Mail, Share2 } from "lucide-react";
 import { CHANNELS } from "@/lib/data/channels";
-import { logoutAction } from "@/lib/auth-actions";
 import { cn } from "@/lib/utils/cn";
 
 const ICONS = {
@@ -53,16 +52,6 @@ export function Sidebar() {
           );
         })}
       </nav>
-
-      <form action={logoutAction} className="border-t border-border px-2 py-3">
-        <button
-          type="submit"
-          className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-mono text-sm text-text-secondary transition-colors hover:bg-surface-2 hover:text-text-primary"
-        >
-          <LogOut size={15} strokeWidth={2} className="text-text-muted" />
-          déconnexion
-        </button>
-      </form>
     </aside>
   );
 }
