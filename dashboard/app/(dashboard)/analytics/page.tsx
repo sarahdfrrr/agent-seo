@@ -10,7 +10,7 @@ export default async function AnalyticsPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { preset, granularity } = parseFilters(await searchParams);
-  const payload = await getChannelData("ga4", preset, granularity);
+  const filters = parseFilters(await searchParams);
+  const payload = await getChannelData("ga4", filters);
   return <ChannelView meta={CHANNEL_BY_ID.ga4} payload={payload} />;
 }

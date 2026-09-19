@@ -1,6 +1,7 @@
-import type { ChannelId, ChannelPayload, DailyRow, DateRangePreset, Granularity, TableRow } from "@/lib/types";
+import type { ChannelId, ChannelPayload, DailyRow, TableRow } from "@/lib/types";
+import type { ResolvedFilters } from "@/lib/utils/searchParams";
 import { dataSourceMode } from "@/lib/env";
-import { previousRange, resolveRange, filterByRange, daysBetween } from "@/lib/utils/dates";
+import { previousRange, resolveDateFilter, filterByRange, daysBetween } from "@/lib/utils/dates";
 import { buildTrend, computeKpis } from "@/lib/data/aggregate";
 import { CHANNEL_BY_ID, KPI_DEFS, KPI_DEFS_BY_KEY } from "@/lib/data/channels";
 import {
@@ -20,7 +21,7 @@ import { fetchGSCDailyRows, fetchGSCPages, fetchGSCQueries } from "@/lib/integra
 import { fetchGoogleAdsCampaigns, fetchGoogleAdsDailyRows } from "@/lib/integrations/google-ads";
 import { fetchMailchimpCampaigns, fetchMailchimpDailyRows } from "@/lib/integrations/mailchimp";
 
-async function getRows(channel: ChannelId, window: { start: string; end: string }): Promise<{ rows: DailyRow[]; source: "mock" | "live" }> {
+export async function getRows(channel: ChannelId, window: { start: string; end: string }): Promise<{ rows: DailyRow[]; source: "mock" | "live" }> {
   const mode = dataSourceMode(channel);
   if (mode === "live") {
     try {
@@ -212,15 +213,12 @@ async function buildBreakdownsAndTables(
   }
 }
 
-export async function getChannelData(
-  channel: ChannelId,
-  preset: DateRangePreset,
-  granularity: Granularity,
-): Promise<ChannelPayload> {
+export async function getChannelData(channel: ChannelId, filters: ResolvedFilters): Promise<ChannelPayload> {
   const today = new Date();
-  const range = resolveRange(preset, today);
+  const range = resolveDateFilter(filters.date, today);
   const prevRange = previousRange(range);
   const window = { start: prevRange.start, end: range.end };
+  const granularity = filters.granularity;
 
   const { rows, source } = await getRows(channel, window);
   const meta = CHANNEL_BY_ID[channel];

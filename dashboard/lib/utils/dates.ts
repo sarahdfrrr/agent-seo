@@ -11,7 +11,7 @@ import {
   startOfWeek,
   subDays,
 } from "date-fns";
-import type { DateRangePreset, DailyRow, Granularity } from "@/lib/types";
+import type { DateFilter, DateRangePreset, DailyRow, Granularity } from "@/lib/types";
 
 export const ISO = "yyyy-MM-dd";
 
@@ -46,6 +46,22 @@ export function resolveRange(
     default:
       return { start: toISO(subDays(end, 29)), end: toISO(end) };
   }
+}
+
+export function isValidISODate(s: string | undefined | null): s is string {
+  if (!s || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  return !Number.isNaN(Date.parse(`${s}T00:00:00Z`));
+}
+
+/** Resolve either a preset or an explicit custom range into concrete
+ * start/end dates. A custom range is clamped so it never reaches past
+ * "today" and never has end < start. */
+export function resolveDateFilter(filter: DateFilter, today: Date): { start: string; end: string } {
+  if (filter.mode === "preset") return resolveRange(filter.preset, today);
+  const todayISO = toISO(today);
+  const start = filter.start > todayISO ? todayISO : filter.start;
+  const end = filter.end > todayISO ? todayISO : filter.end;
+  return start <= end ? { start, end } : { start: end, end: start };
 }
 
 /** The immediately preceding period of equal length, for delta comparisons. */

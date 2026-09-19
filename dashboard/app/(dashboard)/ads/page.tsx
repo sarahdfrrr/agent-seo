@@ -10,7 +10,7 @@ export default async function AdsPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { preset, granularity } = parseFilters(await searchParams);
-  const payload = await getChannelData("ads", preset, granularity);
+  const filters = parseFilters(await searchParams);
+  const payload = await getChannelData("ads", filters);
   return <ChannelView meta={CHANNEL_BY_ID.ads} payload={payload} />;
 }

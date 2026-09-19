@@ -7,10 +7,19 @@ import { LineTrendChart } from "@/components/charts/LineTrendChart";
 import { BarBreakdownChart } from "@/components/charts/BarBreakdownChart";
 import { DataTable } from "@/components/dashboard/DataTable";
 
-export function ChannelView({ meta, payload }: { meta: ChannelMeta; payload: ChannelPayload }) {
+export function ChannelView({
+  meta,
+  payload,
+  hideHeader,
+}: {
+  meta: ChannelMeta;
+  payload: ChannelPayload;
+  /** Skip the page header — used when a parent (e.g. SocialView's tabs) already renders one. */
+  hideHeader?: boolean;
+}) {
   return (
     <div>
-      <PageHeader title={meta.label} description={meta.description} source={payload.source} />
+      {hideHeader ? null : <PageHeader title={meta.label} description={meta.description} source={payload.source} />}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {payload.kpis.map((kpi) => (

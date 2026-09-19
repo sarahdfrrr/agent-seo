@@ -62,3 +62,5 @@ export type ChannelPayload = {
 };
 
 export type DateRangePreset = "7d" | "30d" | "90d" | "mtd" | "qtd" | "12m";
+
+export type DateFilter = { mode: "preset"; preset: DateRangePreset } | { mode: "custom"; start: string; end: string };

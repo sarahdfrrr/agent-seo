@@ -22,10 +22,10 @@ export async function GET(request: NextRequest, context: { params: Promise<{ cha
   }
 
   const searchParams = Object.fromEntries(request.nextUrl.searchParams.entries());
-  const { preset, granularity } = parseFilters(searchParams);
+  const filters = parseFilters(searchParams);
 
   try {
-    const payload = await getChannelData(channel as ChannelId, preset, granularity);
+    const payload = await getChannelData(channel as ChannelId, filters);
     return NextResponse.json(payload);
   } catch (err) {
     return NextResponse.json({ error: err instanceof Error ? err.message : "Erreur inconnue" }, { status: 500 });

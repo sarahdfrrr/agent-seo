@@ -3,8 +3,7 @@ import { parseFilters } from "@/lib/utils/searchParams";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { ChannelCard } from "@/components/dashboard/ChannelCard";
-import { Card, CardBody, CardHeader } from "@/components/ui/Card";
-import { LineTrendChart } from "@/components/charts/LineTrendChart";
+import { AcquisitionTrendCard } from "@/components/dashboard/AcquisitionTrendCard";
 
 export const metadata = { title: "Vue d'ensemble — Pulse" };
 
@@ -14,10 +13,15 @@ export default async function OverviewPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const rawParams = await searchParams;
-  const { preset, granularity } = parseFilters(rawParams);
-  const overview = await getOverview(preset, granularity);
+  const filters = parseFilters(rawParams);
+  const overview = await getOverview(filters);
+  const granularity = filters.granularity;
 
-  const suffix = `?preset=${preset}&granularity=${granularity}`;
+  const suffixParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(rawParams)) {
+    if (typeof value === "string") suffixParams.set(key, value);
+  }
+  const suffix = suffixParams.toString() ? `?${suffixParams.toString()}` : "";
 
   return (
     <div>
@@ -32,19 +36,17 @@ export default async function OverviewPage({
         ))}
       </div>
 
-      <Card className="mt-4">
-        <CardHeader title={overview.trendTitle} subtitle={`Regroupé par ${granularity === "day" ? "jour" : granularity === "week" ? "semaine" : "mois"}`} />
-        <CardBody>
-          <LineTrendChart
-            data={overview.trend}
-            seriesKeys={overview.trendSeriesKeys}
-            labels={overview.trendLabels}
-            granularity={overview.granularity}
-            format="number"
-            height={320}
-          />
-        </CardBody>
-      </Card>
+      <div className="mt-4">
+        <AcquisitionTrendCard
+          title={overview.trendTitle}
+          subtitle={`Regroupé par ${granularity === "day" ? "jour" : granularity === "week" ? "semaine" : "mois"} — décoche un canal pour le masquer`}
+          data={overview.trend}
+          seriesKeys={overview.trendSeriesKeys}
+          labels={overview.trendLabels}
+          granularity={overview.granularity}
+          format="number"
+        />
+      </div>
 
       <h2 className="mb-3 mt-6 font-mono text-xs uppercase tracking-wide text-text-muted">Par canal</h2>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

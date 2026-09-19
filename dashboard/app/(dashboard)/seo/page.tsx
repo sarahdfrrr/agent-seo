@@ -10,7 +10,7 @@ export default async function SeoPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { preset, granularity } = parseFilters(await searchParams);
-  const payload = await getChannelData("seo", preset, granularity);
+  const filters = parseFilters(await searchParams);
+  const payload = await getChannelData("seo", filters);
   return <ChannelView meta={CHANNEL_BY_ID.seo} payload={payload} />;
 }

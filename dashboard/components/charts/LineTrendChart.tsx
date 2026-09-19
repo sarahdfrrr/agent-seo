@@ -13,6 +13,14 @@ type Props = {
   granularity: Granularity;
   format?: MetricFormat;
   height?: number;
+  /** Explicit key → color overrides. Without it, colors are assigned by
+   * position in `seriesKeys` — which shifts if the caller filters that array
+   * (e.g. a channel toggle). Pass this whenever series can be hidden, so a
+   * given entity keeps its color regardless of what else is showing. */
+  colors?: Record<string, string>;
+  /** Hide the built-in legend, e.g. when the caller renders its own
+   * (interactive) legend instead. */
+  legend?: boolean;
 };
 
 function CustomTooltip({
@@ -48,8 +56,9 @@ function CustomTooltip({
   );
 }
 
-export function LineTrendChart({ data, seriesKeys, labels, granularity, format = "number", height = 280 }: Props) {
-  const showLegend = seriesKeys.length > 1;
+export function LineTrendChart({ data, seriesKeys, labels, granularity, format = "number", height = 280, colors, legend = true }: Props) {
+  const showLegend = legend && seriesKeys.length > 1;
+  const colorFor = (key: string, i: number) => colors?.[key] ?? seriesColor(i);
 
   return (
     <div>
@@ -80,7 +89,7 @@ export function LineTrendChart({ data, seriesKeys, labels, granularity, format =
               key={key}
               type="monotone"
               dataKey={key}
-              stroke={seriesColor(i)}
+              stroke={colorFor(key, i)}
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 4, strokeWidth: 0 }}
@@ -95,7 +104,7 @@ export function LineTrendChart({ data, seriesKeys, labels, granularity, format =
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-border pt-3">
           {seriesKeys.map((key, i) => (
             <div key={key} className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full" style={{ background: seriesColor(i) }} />
+              <span className="h-2 w-2 rounded-full" style={{ background: colorFor(key, i) }} />
               <span className="text-xs text-text-secondary">{labels[key] ?? key}</span>
             </div>
           ))}

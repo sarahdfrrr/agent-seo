@@ -1,4 +1,5 @@
-import type { ChannelId, DateRangePreset, Granularity, KpiValue, SeriesPoint } from "@/lib/types";
+import type { ChannelId, Granularity, KpiValue, SeriesPoint } from "@/lib/types";
+import type { ResolvedFilters } from "@/lib/utils/searchParams";
 import { getChannelData } from "@/lib/data/getChannelData";
 import { CHANNEL_BY_ID } from "@/lib/data/channels";
 
@@ -31,13 +32,14 @@ function pick(kpis: KpiValue[], key: string): KpiValue {
   return found;
 }
 
-export async function getOverview(preset: DateRangePreset, granularity: Granularity): Promise<OverviewPayload> {
+export async function getOverview(filters: ResolvedFilters): Promise<OverviewPayload> {
+  const granularity = filters.granularity;
   const [ga4, seo, ads, email, social] = await Promise.all([
-    getChannelData("ga4", preset, granularity),
-    getChannelData("seo", preset, granularity),
-    getChannelData("ads", preset, granularity),
-    getChannelData("email", preset, granularity),
-    getChannelData("social", preset, granularity),
+    getChannelData("ga4", filters),
+    getChannelData("seo", filters),
+    getChannelData("ads", filters),
+    getChannelData("email", filters),
+    getChannelData("social", filters),
   ]);
 
   const kpis: KpiValue[] = [
