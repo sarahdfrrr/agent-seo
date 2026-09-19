@@ -23,10 +23,10 @@ const themeInitScript = `
 (function () {
   try {
     var stored = localStorage.getItem("pulse-theme");
-    var theme = stored === "light" || stored === "dark" ? stored : "dark";
+    var theme = stored === "light" || stored === "dark" ? stored : "light";
     document.documentElement.setAttribute("data-theme", theme);
   } catch (e) {
-    document.documentElement.setAttribute("data-theme", "dark");
+    document.documentElement.setAttribute("data-theme", "light");
   }
 })();
 `;
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="fr"
-      data-theme="dark"
+      data-theme="light"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
